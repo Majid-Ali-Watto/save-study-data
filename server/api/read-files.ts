@@ -1,34 +1,48 @@
-import { GridFSBucket } from "mongodb";
-import { getDbFile } from "~/db/connection";
+import { MongoClient, Db, Collection, Document } from "mongodb";
+import { defineEventHandler, H3Event, createError } from "h3";
 
-export default defineEventHandler(async (event) => {
+// MongoDB connection details
+const mongoURI = "mongodb://localhost:27017/nuxt-file-db";
+const client = new MongoClient(mongoURI);
+let db: Db;
+let collection: Collection<Document>;
+
+// Establish MongoDB connection
+async function connectDB(): Promise<void> {
+	await client.connect();
+	db = client.db();
+	collection = db.collection("files");
+}
+
+// Connect to the database on module initialization
+connectDB().catch((err) => {
+	console.error("Failed to connect to the database:", err);
+});
+
+export default defineEventHandler(async (event: H3Event): Promise<object> => {
 	try {
-		const db = getDbFile();
-		if (!db) {
-			throw createError({ statusCode: 500, message: "Files database connection not available" });
+		if (!collection) {
+			throw new Error("Database connection not available");
 		}
 
-		// Initialize GridFSBucket
-		const bucket = new GridFSBucket(db, { bucketName: "uploads" });
-
-		// Find all files in the uploads bucket
-		const files = await bucket.find().toArray();
+		// Fetch all files from the collection
+		const files = await collection.find().toArray();
 
 		if (files.length === 0) {
-			throw createError({ statusCode: 404, message: "No files found" });
+			throw new Error("No files found");
 		}
+	//	console.log(files)
 
-		// Return the list of files to the client
+		// Format the files' metadata
 		const fileList = files.map((file) => ({
 			filename: file.filename,
 			contentType: file.contentType,
-			length: file.length, // Optional: File size
-			uploadDate: file.uploadDate // Optional: Upload date
+			description: file.description,
+			size: file.size // Binary data length represents file size
 		}));
 
-		return fileList;
-	} catch (error) {
-		console.error("Error retrieving files:", error);
-		throw createError({ statusCode: 500, message: "Error retrieving files" });
+		return { files: fileList };
+	} catch (error: any) {
+		throw createError({ statusCode: 500, message: error.message || "An error occurred while retrieving files" });
 	}
 });

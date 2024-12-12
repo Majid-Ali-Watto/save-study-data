@@ -1,5 +1,8 @@
 <template>
-	<Home :links="links" />
+	<div class="container">
+		<AddTopics/>
+		<Home :links="links" />
+	</div>
 </template>
 
 <script setup lang="ts">

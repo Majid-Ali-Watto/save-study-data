@@ -1,7 +1,7 @@
 <template>
 	<div class="text-gray-800 flex justify-center">
 		<form @submit.prevent="handleSubmit" class="bg-white w-[100%] shadow-lg rounded-lg p-6 space-y-4">
-			<h2 class="text-2xl font-bold text-center text-lime-600">Submit Your Link</h2>
+			<h2 class="text-2xl font-bold text-center text-lime-600">Submit Your Code</h2>
 
 			<div>
 				<label for="title" class="block text-sm font-medium text-gray-700">Title</label>

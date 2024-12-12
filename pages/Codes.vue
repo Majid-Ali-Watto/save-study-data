@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="container">
 		<AddCodeForm />
 		<ViewCodes :codes="codes" />
 	</div>
