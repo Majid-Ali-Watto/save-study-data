@@ -1,21 +1,30 @@
 <template>
-	<div class="container mx-auto pt-4">
-		<input v-model="query" id="title" type="search" name="search" placeholder="Search code..." class="text-slate-700 mt-1 p-1 block outline-none rounded-sm border-gray-200 border-2 shadow-sm focus:border-lime-200 focus:ring-lime-300 sm:text-sm" required />
+	<div class="container mx-auto pt-4 rounded mt-4 min-h-screen">
+		<!-- Search Bar -->
+		<div class="relative max-w-md mx-auto mb-8">
+			<input v-model="query" type="search" placeholder="Search code snippets..." class="w-full text-gray-800 p-3 pl-10 rounded-lg border shadow-md focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-lime-400 transition-all" required />
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-500 absolute left-3 top-3">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M16.92 10.74a6.75 6.75 0 11-9.54-9.54 6.75 6.75 0 019.54 9.54z" />
+			</svg>
+		</div>
 
-		<ul class="flex flex-wrap w-full gap-y-8">
-			<li v-for="code in filteredCode" :key="code._id" class="p-6 bg-slate-900 text-white shadow-lg rounded-lg hover:shadow-2xl transition-shadow duration-300 w-full">
-				<div class="flex justify-between flex-wrap">
-					<h1 class="font-semibold text-lime-500 text-xl mb-2 hover:underline cursor-pointer">
+		<!-- Code Snippets List -->
+		<ul class="flex flex-wrap gap-6">
+			<li v-for="code in filteredCode" :key="code._id" class="p-6 w-full">
+				<div class="flex justify-between items-center flex-wrap gap-x-1">
+					<h1 class="font-semibold text-gray-300 text-lg leading-tight hover:underline cursor-pointer truncate" :title="code.title">
 						{{ code.title }}
 					</h1>
-					<span class="block text-gray-400 text-sm mb-4"> Saved: {{ new Date(code.createdAt).toLocaleDateString() }} </span>
+					<span class="text-gray-400 text-sm">Saved: {{ new Date(code.createdAt).toLocaleDateString() }}</span>
 				</div>
-				<pre class="overflow-auto bg-slate-800 p-4 rounded-md text-left text-sm text-gray-200 whitespace-pre-wrap break-words">{{ code.code?.trimStart() || "" }}</pre>
+				<pre class="overflow-auto bg-slate-800 p-4 rounded-md text-left text-sm leading-relaxed text-gray-300 whitespace-pre-wrap break-words"
+					>{{ code.code?.trimStart() || "" }}
+				</pre
+				>
 			</li>
 		</ul>
 	</div>
 </template>
-
 <script setup lang="ts">
 	// Define the interface for the Code type
 	interface Code {
@@ -32,3 +41,15 @@
 	}>();
 	const filteredCode = computed(() => props.codes.filter((code) => code.title.toLocaleLowerCase().includes(query.value)));
 </script>
+<style scoped>
+
+	input::placeholder {
+		color: #9ca3af;
+		font-style: italic;
+	}
+
+	input:focus::placeholder {
+		color: transparent;
+		transition: color 0.2s;
+	}
+</style>

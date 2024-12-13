@@ -29,61 +29,7 @@
 	const filteredFiles = computed(() => {
 		return files.value.filter((file) => file.filename.toLocaleLowerCase().includes(query.value.toLocaleLowerCase()) || file.description.toLocaleLowerCase().includes(query.value.toLocaleLowerCase()));
 	});
-	// const previewFile = async (fileName: string): Promise<void> => {
-	// 	if (!fileName) {
-	// 		message.value = "Please select a file to preview.";
-	// 		return;
-	// 	}
 
-	// 	try {
-	// 		const response = await fetch(`/api/read-file?filename=${encodeURIComponent(fileName)}`);
-
-	// 		if (!response.ok) {
-	// 			throw new Error("Failed to fetch file.");
-	// 		}
-
-	// 		// Get the binary data
-	// 		const blob = await response.blob();
-
-	// 		// Detect content type
-	// 		const contentType = response.headers.get("Content-Type") || "";
-	// 		console.log("🚀 -> file: ReadFiles.vue:50 -> previewFile -> contentType:", contentType);
-	// 		// Handle file preview based on type
-	// 		if (contentType.startsWith("text/") || fileName.endsWith(".js") || fileName.endsWith(".jsx")) {
-	// 			// Decode and show as text (JavaScript or Text)
-	// 			const text = await blob.text();
-	// 			showModal(fileName, `<pre>${escapeHtml(text)}</pre>`);
-	// 		} else if (contentType === "application/octet-stream" || fileName.endsWith(".vue")) {
-	// 			// Treat the file as a text file
-	// 			const text = await blob.text();
-	// 			showModal(fileName, `<pre>${escapeHtml(text)}</pre>`);
-
-	// 		} else if (contentType === "application/pdf") {
-	// 			// Show as embedded PDF
-	// 			const pdfUrl = URL.createObjectURL(blob);
-	// 			window.open(pdfUrl, "_blank");
-	// 			// Cleanup URL after use
-	// 			URL.revokeObjectURL(pdfUrl);
-	// 		} else if (contentType.startsWith("image/")) {
-	// 			const imageUrl = URL.createObjectURL(blob);
-	// 			window.open(imageUrl, "_blank");
-	// 			// After the modal is closed, revoke the object URL
-	// 			URL.revokeObjectURL(imageUrl);
-	// 		}
-	// 		 else if (contentType.startsWith("video/")) {
-	// 			const imageUrl = URL.createObjectURL(blob);
-	// 			window.open(imageUrl, "_blank");
-	// 			// After the modal is closed, revoke the object URL
-	// 			URL.revokeObjectURL(imageUrl);
-	// 		}
-	// 		 else {
-	// 			message.value = "Unsupported file type for preview.";
-	// 		}
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 		message.value = "Error previewing file.";
-	// 	}
-	// };
 	const previewFile = async (fileName: string): Promise<void> => {
 		if (!fileName) {
 			message.value = "Please select a file to preview.";
@@ -105,6 +51,7 @@
 			if (contentType.startsWith("text/") || /\.(js|jsx|vue|txt|md|mdx)$/.test(fileName)) {
 				// Handle text-based files
 				const text = await blob.text();
+				console.log("opening modal");
 				showModal(fileName, `<pre>${escapeHtml(text)}</pre>`);
 			} else if (isNotText(contentType, fileName)) {
 				// create blob url e.g blob:http://localhost:8080
@@ -184,7 +131,7 @@
 </script>
 <template>
 	<div>
-		<div class="text-gray-600 font-bold flex justify-between flex-wrap">
+		<div class="text-slate-300 font-bold flex justify-between flex-wrap">
 			<header v-if="filteredFiles.length > 0">All Files</header>
 			<input v-model="query" id="title" type="search" name="search" placeholder="Search files..." class="mt-1 p-1 block outline-none rounded-sm border-gray-200 border-2 shadow-sm focus:border-lime-200 focus:ring-lime-300 sm:text-sm" required />
 		</div>
@@ -192,13 +139,13 @@
 		<Modal @close="closeModal" :title="modalTitle" :code="modalContent" :isVisible="isModalVisible" />
 		<div v-if="filteredFiles.length > 0" class="mt-5">
 			<div v-for="file in filteredFiles" :key="file.filename">
-				<div class="flex flex-col border rounded mb-1 bg-slate-100">
-					<div class="p-[8px] text-gray-600 italic text-justify overflow-auto">{{ file.description }}</div>
+				<div class="flex flex-col border rounded mb-4">
+					<div class="p-[8px] text-slate-300 italic text-justify overflow-auto">{{ file.description }}</div>
 					<div class="flex justify-between items-center flex-wrap p-[10px] gap-2">
 						<div class="flex gap-x-[15px] justify-between font-medium overflow-auto">
-							<span class="text-slate-700 bg-white border p-1 rounded">{{ file.filename }}</span>
-							<span class="text-slate-600 bg-white border p-1 rounded">{{ formatSize(file.size) }}</span>
-							<span class="text-slate-600 bg-white border p-1 rounded">{{ file.contentType }}</span>
+							<span class="text-slate-300 border p-1 rounded">{{ file.filename }}</span>
+							<span class="text-slate-300 border p-1 rounded">{{ formatSize(file.size) }}</span>
+							<span class="text-slate-300 border p-1 rounded">{{ file.contentType }}</span>
 						</div>
 						<div class="flex justify-between gap-x-2">
 							<!-- Download button for each file -->

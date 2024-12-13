@@ -1,19 +1,37 @@
-/* For Webkit-based browsers (Chrome, Safari, Edge) */
+/* Webkit Browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-  width: 1px; /* Set the width of the scrollbar */
+  width: 1px; /* Set the scrollbar width */
+  height: 1px; /* Set the scrollbar height for horizontal scrolling */
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(128, 128, 128, 0.5); /* Set the thumb color with transparency */
-  border-radius: 10px; /* Optional: rounded corners for the thumb */
+  background-color: rgba(128, 128, 128, 0.5); /* Thumb color */
+  border-radius: 10px; /* Round edges */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(128, 128, 128, 0.7); /* Darker color on hover */
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent; /* Make the track transparent */
+  background: transparent; /* Transparent track */
 }
 
-/* For Firefox */
+::-webkit-scrollbar-button {
+  display: none; /* Hide arrows */
+}
+
+/* Firefox */
 html {
-  scrollbar-width: thin; /* Set the width of the scrollbar */
-  scrollbar-color: rgba(128, 128, 128, 0.5) transparent; /* Set the thumb and track colors */
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: rgba(128, 128, 128, 0.5) transparent; /* Thumb and track colors */
+}
+
+/* Ensure the styles apply to the whole application */
+body {
+  background-color: #333 !important;
+  overflow: overlay; /* Use overlay to keep the scrollbar above content */
+}
+textarea{
+  resize: none;
 }

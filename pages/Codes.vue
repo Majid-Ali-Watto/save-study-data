@@ -8,7 +8,9 @@
 <script setup lang="ts">
 	import { ref, onMounted } from "vue";
 	import type { Ref } from "vue";
-
+	definePageMeta({
+		middleware: "auth"
+	});
 	interface Code {
 		code: string;
 		title: string;
@@ -32,5 +34,3 @@
 		}
 	});
 </script>
-
-<style scoped></style>

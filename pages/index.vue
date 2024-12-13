@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<AddTopics/>
+		<AddTopics />
 		<Home :links="links" />
 	</div>
 </template>
@@ -8,7 +8,9 @@
 <script setup lang="ts">
 	import { ref, onMounted } from "vue";
 	import type { Ref } from "vue";
-
+	definePageMeta({
+		middleware: "auth"
+	});
 	interface Link {
 		link: string;
 		title: string;

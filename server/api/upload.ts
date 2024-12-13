@@ -1,17 +1,6 @@
-import { MongoClient } from "mongodb";
 import multer from "multer";
 import { defineEventHandler } from "h3";
-
-const mongoURI = "mongodb://localhost:27017/nuxt-file-db";
-const client = new MongoClient(mongoURI);
-async function ConnectDB() {
-	await client.connect();
-}
-ConnectDB();
-const db = client.db();
-const collection = db.collection("files");
-
-const upload = multer();
+import { getDbFile } from "~/db/connection";
 
 export default defineEventHandler(async (event) => {
 	if (event.node.req.method !== "POST") {
@@ -19,6 +8,16 @@ export default defineEventHandler(async (event) => {
 		event.node.res.end();
 		return { message: "Only POST requests are allowed." };
 	}
+	const db = getDbFile();
+	if (!db) {
+		event.node.res.statusCode = 500; // Method Not Allowed
+		event.node.res.end();
+		return { message: "Internal Server Error." };
+	}
+	const collection = db.collection("files");
+
+	const upload = multer();
+
 	const uploadMiddleware = upload.single("file");
 	return new Promise((resolve, reject) => {
 		uploadMiddleware(event.node.req as any, event.node.res as any, async (err) => {

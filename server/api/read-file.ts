@@ -1,17 +1,5 @@
-import { MongoClient } from "mongodb";
 import { createError } from "h3";
 import { getDbFile } from "~/db/connection"; // Assuming you have a `getDbFile` function to get the database connection
-
-const mongoURI = "mongodb://localhost:27017/nuxt-file-db";
-const client = new MongoClient(mongoURI);
-
-async function ConnectDB() {
-	await client.connect();
-}
-ConnectDB();
-
-const db = client.db();
-const collection = db.collection("files");
 
 export default defineEventHandler(async (event) => {
 	const query = getQuery(event); // Extract query params
@@ -22,6 +10,9 @@ export default defineEventHandler(async (event) => {
 	}
 
 	try {
+		const db = getDbFile();
+		if (!db) throw new Error('Could not find database connection.');
+		const collection = db.collection("files");
 		const file = await collection.findOne({ filename: fileName });
 
 		if (!file) {

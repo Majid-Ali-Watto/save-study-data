@@ -1,26 +1,14 @@
-import { MongoClient, Db, Collection, Document } from "mongodb";
+import { Collection, Document } from "mongodb";
 import { defineEventHandler, H3Event, createError } from "h3";
-
-// MongoDB connection details
-const mongoURI = "mongodb://localhost:27017/nuxt-file-db";
-const client = new MongoClient(mongoURI);
-let db: Db;
-let collection: Collection<Document>;
-
-// Establish MongoDB connection
-async function connectDB(): Promise<void> {
-	await client.connect();
-	db = client.db();
-	collection = db.collection("files");
-}
-
-// Connect to the database on module initialization
-connectDB().catch((err) => {
-	console.error("Failed to connect to the database:", err);
-});
+import { getDbFile } from "~/db/connection";
 
 export default defineEventHandler(async (event: H3Event): Promise<object> => {
 	try {
+		let db = getDbFile();
+		let collection: Collection<Document>;
+		if (!db) throw new Error("Database connection not available");
+		collection = db.collection("files");
+
 		if (!collection) {
 			throw new Error("Database connection not available");
 		}
@@ -31,7 +19,7 @@ export default defineEventHandler(async (event: H3Event): Promise<object> => {
 		if (files.length === 0) {
 			throw new Error("No files found");
 		}
-	//	console.log(files)
+		//	console.log(files)
 
 		// Format the files' metadata
 		const fileList = files.map((file) => ({
