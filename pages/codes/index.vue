@@ -1,5 +1,9 @@
 <template>
 	<div class="container">
+		<Head>
+			<Title>Codes</Title>
+			<Meta name="description" content="it is code section" />
+		</Head>
 		<AddCodeForm />
 		<ViewCodes :codes="codes" />
 	</div>
@@ -34,3 +38,4 @@
 		}
 	});
 </script>
+s

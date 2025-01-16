@@ -76,12 +76,10 @@
 
 	// Function to handle downloading a selected file
 	const downloadFile = async (fileName: string): Promise<void> => {
-		if (!fileName) {
-			message.value = "Please select a file to download.";
-			return;
-		}
-
 		try {
+			if (!fileName) {
+				throw new Error("Please select a file to download.");
+			}
 			const response = await fetch(`/api/read-file?filename=${encodeURIComponent(fileName)}`);
 			console.log(response);
 			if (!response.ok) {
@@ -99,9 +97,12 @@
 
 			URL.revokeObjectURL(url); // Clean up the blob URL
 			message.value = "File downloaded successfully.";
-		} catch (error) {
+		} catch (error: any) {
 			console.error(error);
-			message.value = "Error downloading file.";
+			message.value = error.message || "Error downloading file.";
+		} finally {
+			const textColor = message.value != "File downloaded successfully." ? "red" : "green";
+			showModal("Download Status", `<pre style="color:${textColor} !important;">${escapeHtml(message.value)}</pre>`);
 		}
 	};
 	// Format file size from bytes to a human-readable format
@@ -131,13 +132,21 @@
 </script>
 <template>
 	<div>
-		<div class="text-slate-300 font-bold flex justify-between flex-wrap">
+		<div class="text-slate-300 font-bold flex justify-between items-center flex-wrap">
 			<header v-if="filteredFiles.length > 0">All Files</header>
-			<input v-model="query" id="title" type="search" name="search" placeholder="Search files..." class="mt-1 p-1 block outline-none rounded-sm border-gray-200 border-2 shadow-sm focus:border-lime-200 focus:ring-lime-300 sm:text-sm" required />
+			<!-- <input v-model="query" id="title" type="search" name="search" placeholder="Search files..." class="text-slate-700 font-normal mt-1 p-1 block outline-none rounded-sm border-gray-200 border-2 shadow-sm focus:border-lime-200 focus:ring-lime-300 sm:text-sm" required /> -->
+			<div>
+				<div class="relative max-w-md mx-auto mb-2">
+					<input v-model="query" type="search" placeholder="Search files..." class="w-full text-slate-700 font-normal p-1 pl-10 rounded-lg border shadow-md focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-lime-400 transition-all" required />
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3 text-gray-500 absolute left-3 top-3">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M16.92 10.74a6.75 6.75 0 11-9.54-9.54 6.75 6.75 0 019.54 9.54z" />
+					</svg>
+				</div>
+			</div>
 		</div>
 		<!-- List of files available for download -->
 		<Modal @close="closeModal" :title="modalTitle" :code="modalContent" :isVisible="isModalVisible" />
-		<div v-if="filteredFiles.length > 0" class="mt-5">
+		<div v-if="filteredFiles.length > 0">
 			<div v-for="file in filteredFiles" :key="file.filename">
 				<div class="flex flex-col border rounded mb-4">
 					<div class="p-[8px] text-slate-300 italic text-justify overflow-auto">{{ file.description }}</div>
@@ -159,9 +168,6 @@
 
 		<!-- If no files are available -->
 		<p v-if="filteredFiles.length === 0" class="file-name">No files available for download.</p>
-
-		<!-- Display message to the user -->
-		<p v-if="message" class="message">{{ message }}</p>
 	</div>
 </template>
 

@@ -49,12 +49,18 @@
 	<!-- <div class="min-h-screen py-10"> -->
 	<div class="container mx-auto">
 		<!-- Header -->
-		<h1 class="text-3xl font-bold text-white mb-6 text-center">Upload Files</h1>
+		<Head>
+			<Title>Code Files</Title>
+			<Meta name="description" content="it is code files section" />
+		</Head>
+		<!-- <h1 class="text-3xl font-bold text-white mb-6 text-center">Upload Files</h1> -->
+
 
 		<!-- Upload Form -->
 		<div class="box-border bg-white shadow-md rounded-lg p-6 mb-10">
+			<h2 class="text-2xl font-bold text-center text-lime-600">Upload Files</h2>
 			<form @submit.prevent="uploadFile" class="space-y-4">
-				<div class="flex flex-col space-x-4">
+				<div class="flex flex-col">
 					<label class="text-gray-900" for="code-description">Code Description</label>
 					<textarea type="text" id="code-description" name="code-description" placeholder="Write meaningful description of code file being uploaded." @change="handleDescChange" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md p-1 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
 				</div>

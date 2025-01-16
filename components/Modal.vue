@@ -1,6 +1,6 @@
 <template>
 	<Teleport to="body">
-		<dialog ref="dialog" class="fixed overflow-hidden z-auto w-[85%] h-[90%] bg-slate-800 text-white rounded-md" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-content">
+		<dialog ref="dialog" class="fixed overflow-hidden z-auto w-full h-full bg-slate-800 text-white rounded-md" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-content">
 			<header id="modal-title" class="p-4 text-lg font-bold border-b border-gray-600 overflow-x-auto">
 				{{ title }}
 			</header>
@@ -42,10 +42,6 @@
 			}
 		}
 	);
-
-	onMounted(() => {
-		console.log(props);
-	});
 
 	const emit = defineEmits(["close"]);
 

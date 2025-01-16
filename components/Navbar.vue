@@ -2,7 +2,7 @@
 	<nav class="flex justify-between items-center">
 		<NuxtLink to="/" :class="getLinkClass('/')"> Links </NuxtLink>
 		<NuxtLink to="/CodeFiles" :class="getLinkClass('/CodeFiles')"> Code Files </NuxtLink>
-		<NuxtLink to="/Codes" :class="getLinkClass('/Codes')"> Text Codes </NuxtLink>
+		<NuxtLink to="/codes" :class="getLinkClass('/Codes')"> Text Codes </NuxtLink>
 	</nav>
 </template>
 

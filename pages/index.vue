@@ -1,37 +1,41 @@
 <template>
-	<div class="container">
-		<AddTopics />
-		<Home :links="links" />
-	</div>
+  <div class="container">
+    <AddTopics />
+
+    <div v-if="status === 'pending'">Loading...</div>
+    <div v-else-if="error">Something went wrong, reload the page.</div>
+    <div v-else>
+      <div v-if="links.length">
+        <Home :links="links" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-	import { ref, onMounted } from "vue";
-	import type { Ref } from "vue";
-	definePageMeta({
-		middleware: "auth"
-	});
-	interface Link {
-		link: string;
-		title: string;
-		_id: string;
-		createdAt: string;
-		description: string;
-	}
+  import type { Ref } from "vue";
+  definePageMeta({
+    middleware: "auth"
+  });
 
-	// Initialize `links` as a reactive array of `Link`
-	const links: Ref<Link[]> = ref([]);
+  interface Link {
+    link: string;
+    title: string;
+    _id: string;
+    createdAt: string;
+    description: string;
+  }
 
-	onMounted(async () => {
-		try {
-			const response = await $fetch("/api/get");
-			console.log(response);
+  // Initialize `links` as a reactive array of `Link`
+  const links: Ref<Link[]> = ref([]);
 
-			// Safely handle `response.posts` to ensure it is an array
-			links.value = Array.isArray(response.posts) ? response.posts : [];
-		} catch (e) {
-			console.error("Error fetching data:", e);
-			alert("Error fetching data");
-		}
-	});
+  const { status, data, error } = useFetch("/api/get");
+  console.log(data.value?.posts);
+
+  // Update `links` once the data is available
+  if (data.value?.posts) {
+    links.value = Array.isArray(data.value?.posts) ? data.value?.posts : [];
+  } else {
+    links.value = [];
+  }
 </script>
