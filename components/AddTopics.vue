@@ -37,27 +37,28 @@
 	async function handleSubmit() {
 		try {
 			// Function to check for CORS error
-			function isCorsError(error: any) {
-				return error instanceof TypeError && error.message === "Failed to fetch";
-			}
+			// function isCorsError(error: any) {
+			// 	return error instanceof TypeError && error.message === "Failed to fetch";
+			// }
 
-			// Function to check if the URL exists
-			async function isValidURL(url: string): Promise<boolean> {
-				try {
-					const response: any = await $fetch(url, {
-						method: "HEAD" // Use HEAD to only fetch headers for validation
-					});
-					return response.status === 200; // If status is 200, the URL exists
-				} catch (error) {
-					console.log("URL validation failed:", error);
-					if (isCorsError(error)) return true;
-					return false;
-				}
-			}
-			const isUrl = await isValidURL(form.link);
-			if (!isUrl) {
-				return alert("Please enter a valid URL");
-			}
+			// // Function to check if the URL exists
+			// async function isValidURL(url: string): Promise<boolean> {
+			// 	try {
+			// 		const response: any = await $fetch(url, {
+			// 			method: "HEAD" // Use HEAD to only fetch headers for validation
+			// 		});
+			// 		console.log("🚀 -> file: AddTopics.vue:50 -> isValidURL -> response:", response);
+			// 		return response.status === 200; // If status is 200, the URL exists
+			// 	} catch (error) {
+			// 		console.log("URL validation failed:",isCorsError(error), error);
+			// 		if (isCorsError(error)) return true;
+			// 		return false;
+			// 	}
+			// }
+			// const isUrl = await isValidURL(form.link);
+			// if (!isUrl) {
+			// 	return alert("Please enter a valid URL");
+			// }
 			// Use $fetch to send the form data
 			const response = await $fetch("/api/post", {
 				method: "POST",
